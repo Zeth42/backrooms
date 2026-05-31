@@ -1,0 +1,10 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+```text
+   # Carpetas de importación automática de Godot
+   .godot/
+   
+   # Archivos temporales de exportación
+   *.tmp
