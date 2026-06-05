@@ -3,8 +3,8 @@
 /android/
 
 ```text
-# Carpetas de importación automática de Godot
-.godot/
+   # Carpetas de importación automática de Godot
+   .godot/
    
-# Archivos temporales de exportación
-*.tmp
+   # Archivos temporales de exportación
+   *.tmp
