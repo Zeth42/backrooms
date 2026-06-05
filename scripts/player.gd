@@ -1,19 +1,19 @@
 extends CharacterBody3D
 
-var SPEED = 5.0
 const MOUSE_SENSITIVITY = 0.003
+
+var SPEED = 5.0
 var BOB_FREQ = 2.0
 var BOB_AMP = 0.08
+var t_bob = 0.0
 
 @onready var camera_3d: Camera3D = $Head/Camera3D
 @onready var head: Node3D = $Head
 
-var t_bob = 0.0
-
 func _ready():
 	#Hide the cursor
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
+
 func _unhandled_input(event: InputEvent) -> void:
 	#Run logic
 	if event.is_action_pressed("sprint"):
