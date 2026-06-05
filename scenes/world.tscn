@@ -1,11 +1,58 @@
 [gd_scene format=3 uid="uid://dpvucyva41jgk"]
 
 [ext_resource type="PackedScene" uid="uid://c06qxmf42ugme" path="res://scenes/player.tscn" id="1_nnsk1"]
+[ext_resource type="PackedScene" uid="uid://ceixudebp3m1i" path="res://models/backrooms_level_0.glb" id="2_rwgxs"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_rwgxs"]
+data = PackedVector3Array(-1, 0, 1, 1, 0, -1, 1, 0, 1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
 
 [node name="World" type="Node3D" unique_id=1847722024]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=617311791]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.299656, -26.13099, 11.036638)
+visible = false
 use_collision = true
-size = Vector3(20, 1, 20)
+size = Vector3(402.9254, 52.309235, 404.71967)
 
 [node name="Player" parent="." unique_id=1887954908 instance=ExtResource("1_nnsk1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -171.30107, 1.4336286, 32.991295)
+
+[node name="Sketchfab_Scene" parent="." unique_id=469020217 instance=ExtResource("2_rwgxs")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/Plane_0/Object_4" parent_id_path=PackedInt32Array(469020217, 199862733) index="0" unique_id=940671013]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Sketchfab_model/root/GLTF_SceneRootNode/Plane_0/Object_4/StaticBody3D" unique_id=1868418489]
+shape = SubResource("ConcavePolygonShape3D_rwgxs")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=794767825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.60217905, 4.309595, -0.0030367374)
+visible = false
+use_collision = true
+size = Vector3(8.887817, 8.447266, 0.9655762)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=384710964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.735402, 4.245534, 4.8142834)
+visible = false
+use_collision = true
+size = Vector3(0.9281006, 8.683197, 10.555176)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="." unique_id=789679286]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -167.6346, 4.3112583, 30.495733)
+visible = false
+use_collision = true
+size = Vector3(10.228607, 8.507111, 0.9892578)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="." unique_id=888867742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -162.79059, 4.2123036, 25.638407)
+visible = false
+use_collision = true
+size = Vector3(1.0598898, 8.507111, 10.65564)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="." unique_id=1404216410]
+transform = Transform3D(0.9994726, -0.014149099, -0.02922779, 0.014168932, 0.9998994, 0.00047142032, 0.02921818, -0.00088530325, 0.99957275, -173.36755, 3.923721, 35.602467)
+visible = false
+use_collision = true
+flip_faces = true
+size = Vector3(0.90116006, 7.673477, 10.79747)
+
+[editable path="Sketchfab_Scene"]

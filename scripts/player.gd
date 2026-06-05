@@ -1,9 +1,9 @@
 extends CharacterBody3D
 
-var SPEED = 5.0
+const SPEED = 3.0
 const MOUSE_SENSITIVITY = 0.003
-var BOB_FREQ = 2.0
-var BOB_AMP = 0.08
+const BOB_FREQ = 2.0
+const BOB_AMP = 0.08
 
 @onready var camera_3d: Camera3D = $Head/Camera3D
 @onready var head: Node3D = $Head
@@ -15,16 +15,6 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 func _unhandled_input(event: InputEvent) -> void:
-	#Run logic
-	if event.is_action_pressed("sprint"):
-		SPEED = 10
-		BOB_FREQ = 3.0
-		BOB_AMP = 0.08
-	elif event.is_action_released("sprint"):
-		SPEED = 5
-		BOB_FREQ = 2.0
-		BOB_AMP = 0.08
-
 	#Mouse look logic
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		#Rotate the body left/right (Y axis)
@@ -49,6 +39,7 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
