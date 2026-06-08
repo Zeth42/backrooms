@@ -1,7 +1,13 @@
 extends CharacterBody3D
 
 const MOUSE_SENSITIVITY = 0.003
+var puede_moverse: bool = false:
+	set(valor):
+		puede_moverse = valor
+		if puede_moverse:
+			_ignorar_primer_movimiento = true
 
+var _ignorar_primer_movimiento: bool = false
 # Variables de velocidad base
 const WALK_SPEED = 5.0
 const SPRINT_SPEED = 10.0
@@ -29,22 +35,28 @@ var esta_cansado: bool = false                 # Bloquea el sprint si llega a 0%
 func _ready():
 	# Inicializar la estamina al máximo al empezar
 	estamina_actual = estamina_maxima
-	# Hide the cursor
+	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	await get_tree().create_timer(0.15).timeout
+	if not puede_moverse:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not puede_moverse:
+		return
+
 	# Mouse look logic
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		# Rotate the body left/right (Y axis)
+		if _ignorar_primer_movimiento:
+			_ignorar_primer_movimiento = false
+			return
+			
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		# Rotate the body up/down (X axis)
 		head.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
-		# Clamp head rotation
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
-	
+
 	# Cursor logic
 	if event.is_action_pressed("quit"):
-		# Make the cursor visible again
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
@@ -52,16 +64,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	# Get the input direction and handle the movement/deceleration.
+	if not puede_moverse:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+		move_and_slide()
+		return
+
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	# logica de estamina y sprint
-	# Solo quiere correr si: aprieta el botón, se está moviendo y NO está exhausto (esta_cansado = false)
 	var quiere_correr = Input.is_action_pressed("sprint") and direction.length() > 0 and not esta_cansado
 	
 	if quiere_correr and estamina_actual > 0.0:
@@ -96,7 +111,6 @@ func _physics_process(delta: float) -> void:
 				if esta_cansado and estamina_actual >= (estamina_maxima * 0.3):
 					esta_cansado = false
 
-	# Aplicar las velocidades calculadas en la física
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
@@ -104,12 +118,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 	
-	# Head bouncing logic
 	if velocity.length() > 0 and is_on_floor():
 		t_bob += delta * velocity.length() * float(is_on_floor())
 		camera_3d.transform.origin = _headbob(t_bob)
 	else:
-		# Reset camera smoothly when stop
 		camera_3d.transform.origin = camera_3d.transform.origin.lerp(Vector3.ZERO, 10 * delta)
 	
 	move_and_slide()
