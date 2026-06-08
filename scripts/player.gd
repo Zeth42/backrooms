@@ -1,13 +1,22 @@
 extends CharacterBody3D
 
 const MOUSE_SENSITIVITY = 0.003
+
+# Variables para los pasos del jugador
+@export var sonidos_pasos: Array[AudioStream] = []
+@onready var footstep_player: AudioStreamPlayer3D = $FootstepPlayer
+var paso_acumulado: float = 0.0
+const DISTANCIA_PASO_CAMINAR = 2.0  # Un paso cada 2 metros caminando
+const DISTANCIA_PASO_CORRER = 2.6   # Un paso cada 2.6 metros corriendo
+
+# Variables para el menu de inicio
 var puede_moverse: bool = false:
 	set(valor):
 		puede_moverse = valor
 		if puede_moverse:
 			_ignorar_primer_movimiento = true
-
 var _ignorar_primer_movimiento: bool = false
+
 # Variables de velocidad base
 const WALK_SPEED = 5.0
 const SPRINT_SPEED = 10.0
@@ -66,7 +75,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
 	if not puede_moverse:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
@@ -78,7 +86,6 @@ func _physics_process(delta: float) -> void:
 	
 	# logica de estamina y sprint
 	var quiere_correr = Input.is_action_pressed("sprint") and direction.length() > 0 and not esta_cansado
-	
 	if quiere_correr and estamina_actual > 0.0:
 		# Estado: Corriendo
 		SPEED = SPRINT_SPEED
@@ -96,7 +103,6 @@ func _physics_process(delta: float) -> void:
 		# Estado: Caminando, quieto, o recuperándose
 		SPEED = WALK_SPEED
 		BOB_FREQ = 2.0
-		
 		# Manejar el temporizador de retraso antes de recargar
 		if tiempo_para_recargar > 0.0:
 			tiempo_para_recargar -= delta
@@ -110,7 +116,6 @@ func _physics_process(delta: float) -> void:
 				# Si ya descansó lo suficiente (ej. recuperó el 30% de la barra), quitamos el bloqueo
 				if esta_cansado and estamina_actual >= (estamina_maxima * 0.3):
 					esta_cansado = false
-
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
@@ -124,6 +129,18 @@ func _physics_process(delta: float) -> void:
 	else:
 		camera_3d.transform.origin = camera_3d.transform.origin.lerp(Vector3.ZERO, 10 * delta)
 	
+	# Pasos sonido
+	if is_on_floor() and velocity.length() > 0.1:
+		paso_acumulado += velocity.length() * delta
+		var distancia_necesaria = DISTANCIA_PASO_CORRER if quiere_correr else DISTANCIA_PASO_CAMINAR
+		
+		if paso_acumulado >= distancia_necesaria:
+			_reproducir_sonido_paso()
+			paso_acumulado = 0.0
+	else:
+		# Si se detiene o está en el aire, reiniciamos el acumulador
+		paso_acumulado = 0.0
+
 	move_and_slide()
 
 func _headbob (time) -> Vector3:
@@ -133,3 +150,12 @@ func _headbob (time) -> Vector3:
 	# Cosine wave for horizontal movement (creates a figure-8 sway)
 	pos.x = cos(time * BOB_FREQ / 2) * BOB_AMP
 	return pos
+
+func _reproducir_sonido_paso() -> void:
+	if sonidos_pasos.is_empty() or not footstep_player:
+		return
+	var sonido_aleatorio = sonidos_pasos.pick_random()
+	footstep_player.stream = sonido_aleatorio
+	footstep_player.pitch_scale = randf_range(0.85, 1.15)
+	
+	footstep_player.play()

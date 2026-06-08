@@ -12,11 +12,7 @@ func _ready():
 
 func _on_play_pressed():
 	boton_play.disabled = true
-	
-	# Capturamos el mouse primero para centrarlo física y silenciosamente
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
-	# Le damos el control al jugador inmediatamente
 	if player:
 		player.puede_moverse = true
 	
