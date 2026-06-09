@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://dk8sqr0hhbsto"]
+
+[ext_resource type="Script" uid="uid://cerjlwj7duyqf" path="res://scripts/escena_f_in.gd" id="1_4klhi"]
+[ext_resource type="VideoStream" uid="uid://2ivf5107x0wm" path="res://Pantallas-menu_in,menu_fin/Video-Project.ogv" id="1_gu85i"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4klhi"]
+bg_color = Color(0.01, 0.01, 0.01, 0)
+
+[node name="EscenaFIn" type="Control" unique_id=875024518]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4klhi")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1976500442]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = -5.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("1_gu85i")
+autoplay = true
+expand = true
+loop = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1698134899]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=1444014396]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.69000006
+anchor_right = 0.5
+anchor_bottom = 0.69000006
+offset_left = -207.0
+offset_top = -98.120026
+offset_right = 202.0
+offset_bottom = 55.879974
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1510815881]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_4klhi")
+text = "INICIO
+"
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=541981644]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.41000003
+anchor_right = 0.5
+anchor_bottom = 0.41200003
+offset_left = -92.0
+offset_top = -86.68002
+offset_right = 107.0
+offset_bottom = 107.02399
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 70
+text = "FIN!!
+"
+
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/Button" to="." method="_on_button_pressed"]
