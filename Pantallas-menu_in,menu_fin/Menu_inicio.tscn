@@ -1,5 +1,18 @@
 [gd_scene format=3 uid="uid://b1npjapy0vd36"]
 
+[ext_resource type="VideoStream" uid="uid://bh2wbuobcqoyk" path="res://Pantallas-menu_in,menu_fin/The-Backrooms-Level-1-_Found-Footage_.ogv" id="1_q00xn"]
+[ext_resource type="Script" uid="uid://7j0b4eomtuwr" path="res://scripts/menu_inicio.gd" id="1_s0cx0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q00xn"]
+bg_color = Color(1, 1, 1, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s0cx0"]
+bg_color = Color(0.004019165, 0.004019165, 0.004019165, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v68gi"]
+bg_color = Color(0.003921569, 0.003921569, 0.003921569, 0)
+border_color = Color(0.0076186024, 0.0076186024, 0.0076186024, 1)
+
 [node name="MenuInicio" type="Control" unique_id=2113677519]
 layout_mode = 3
 anchors_preset = 15
@@ -7,14 +20,64 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_s0cx0")
 
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=321265177]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("1_q00xn")
+autoplay = true
+expand = true
+loop = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=629885430]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=2064878953]
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = -1
+anchor_left = 0.48700002
+anchor_top = 0.60700005
+anchor_right = 0.48700002
+anchor_bottom = 0.60700005
+offset_left = -161.02405
+offset_top = -84.33603
+offset_right = 160.97595
+offset_bottom = 91.66397
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="btn_play" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=1877168544]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_q00xn")
+text = "PLAY"
+
+[node name="btn_salir" type="Button" parent="CanvasLayer/VBoxContainer" unique_id=826845442]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_s0cx0")
+text = "SALIR "
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=1621106348]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.342
+anchor_right = 0.5
+anchor_bottom = 0.342
+offset_left = -171.0
+offset_top = -41.615997
+offset_right = 173.0
+offset_bottom = 41.384003
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxFlat_v68gi")
+text = " THE ROOM"
+
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/btn_play" to="." method="_on_btn_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/btn_salir" to="." method="_on_btn_salir_pressed"]
