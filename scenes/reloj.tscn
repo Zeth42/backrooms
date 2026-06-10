@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://l0wv0k4r4mj6"]
+
+[ext_resource type="PackedScene" uid="uid://dsvyytru11u3i" path="res://decoraciones/reloj_xd.glb" id="1_05nnq"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_16okq"]
+size = Vector3(0.39501953, 2.2067566, 2.225647)
+
+[node name="Reloj" type="Node3D" unique_id=1387911444]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, -0.027169406, 0, 0)
+
+[node name="Sketchfab_Scene" parent="." unique_id=249408280 instance=ExtResource("1_05nnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29126477, 0.91942596, -0.8390529)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=1654456181]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=711263085]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0017089844, 0.0055999756, -0.016082764)
+shape = SubResource("BoxShape3D_16okq")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D/CollisionShape3D" unique_id=314987508]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8176775e-05, -0.040405154, 0.011657715)
+visible = false
+use_collision = true
+size = Vector3(0.407547, 2.307373, 2.2318115)

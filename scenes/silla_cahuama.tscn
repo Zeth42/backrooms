@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://b3d2aph0510cf"]
+
+[ext_resource type="PackedScene" uid="uid://iqvqbp5tax6x" path="res://decoraciones/silla_de_plastico_y_caguama.glb" id="1_2ktbf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jb5uk"]
+size = Vector3(1.2268753, 2.040802, 1.2192993)
+
+[node name="SillaCahuama" type="Node3D" unique_id=21656208]
+
+[node name="Sketchfab_Scene" parent="." unique_id=48053175 instance=ExtResource("1_2ktbf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12663305, 0, 0.49609184)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=1767847351]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=944768170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11122513, 0.520401, -0.51168823)
+shape = SubResource("BoxShape3D_jb5uk")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D/CollisionShape3D" unique_id=135412251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12524414, 0.82266235, -0.492931)
+visible = false
+use_collision = true
+size = Vector3(1.2504883, 1.6845093, 1.2303467)

@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dusaofp8g0dai"]
+
+[ext_resource type="Shader" uid="uid://cv40v80d6wybe" path="res://Efectos_gn/shacrt.gdshader" id="1_57ted"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0vrsa"]
+shader = ExtResource("1_57ted")
+shader_parameter/curvature = 1.0
+shader_parameter/scanline_count = 300.0
+shader_parameter/scanline_opacity = 0.15
+shader_parameter/vignette_opacity = 0.50000002375
+
+[node name="EfectoCamara" type="Node2D" unique_id=1934464301]
+scale = Vector2(1.5, 1.5)
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1176811062]
+material = SubResource("ShaderMaterial_0vrsa")
+offset_top = -2.0
+offset_right = 773.3334
+offset_bottom = 439.33334
+size_flags_horizontal = 4
+mouse_filter = 2

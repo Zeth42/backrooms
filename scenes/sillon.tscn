@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://s5i1jyucedb3"]
+
+[ext_resource type="PackedScene" uid="uid://bd84vsnlkwguf" path="res://decoraciones/sillon_moderno_blanco.glb" id="1_qe360"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0duns"]
+size = Vector3(14.066284, 2.9404297, 4.6372986)
+
+[node name="Sillon" type="Node3D" unique_id=1688113235]
+
+[node name="Sketchfab_Scene" parent="." unique_id=1134702445 instance=ExtResource("1_qe360")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5029727, 0, -2.1523075)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=860370490]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=1405961627]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3154422, -0.5836804, -1.3208017)
+visible = false
+shape = SubResource("BoxShape3D_0duns")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D/CollisionShape3D" unique_id=1863229581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33239758, -0.23391724, -1.318985)
+visible = false
+use_collision = true
+size = Vector3(14.031982, 3.8827515, 4.6636047)

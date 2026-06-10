@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cnuvgo5nwrv6o"]
+
+[ext_resource type="PackedScene" uid="uid://ca3s5jml6ke8e" path="res://decoraciones/traffic_light__semaforo.glb" id="1_dmrfi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dmrfi"]
+size = Vector3(0.12976074, 2.203064, 0.11621094)
+
+[node name="Semaforo" type="Node3D" unique_id=1480114016]
+
+[node name="Sketchfab_Scene" parent="." unique_id=433057670 instance=ExtResource("1_dmrfi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0035538673, 0, 0.006504774)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=16933825]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=1362485710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0012817383, 1.0204163, -0.0024414063)
+visible = false
+shape = SubResource("BoxShape3D_dmrfi")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D/CollisionShape3D" unique_id=1259401829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0010681152, 1.0429382, 0.0058898926)
+visible = false
+use_collision = true
+size = Vector3(0.13006592, 2.1516724, 0.11798096)

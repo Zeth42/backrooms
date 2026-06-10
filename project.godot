@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="Backroom_tutorial01"
-run/main_scene="uid://dov2vbplsjc3n"
+run/main_scene="uid://b1npjapy0vd36"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/mode=3
+window/stretch/mode="viewport"
 
 [editor]
 

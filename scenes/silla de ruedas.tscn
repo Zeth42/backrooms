@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dv18t30tnaoh2"]
+
+[ext_resource type="PackedScene" uid="uid://x05mok7cryns" path="res://decoraciones/silla_de_ruedas.glb" id="1_88gg8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d8k05"]
+size = Vector3(548.68445, 770.8794, 755.3805)
+
+[node name="SillaDeRuedas" type="Node3D" unique_id=452994888]
+transform = Transform3D(0.09, 0, 0, 0, 0.09, 0, 0, 0, 0.09, 0, 0, 0)
+
+[node name="Sketchfab_Scene" parent="." unique_id=1940863304 instance=ExtResource("1_88gg8")]
+transform = Transform3D(0.002, 0, 0, 0, 0.002, 0, 0, 0, 0.002, -0.5346004, 1.1920929e-07, -1.2281189)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=1999908537]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=747227430]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -11.873596, 161.99402, 144.54892)
+visible = false
+shape = SubResource("BoxShape3D_d8k05")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D/CollisionShape3D" unique_id=1700343256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1522827, 26.195358, 11.158356)
+visible = false
+use_collision = true
+size = Vector3(586.7166, 796.0581, 782.341)

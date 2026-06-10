@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://ca6ct3vd386pg"]
+
+[ext_resource type="PackedScene" uid="uid://bw8mq5k17bmtd" path="res://decoraciones/senal_alto.glb" id="1_t2b8o"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nvru6"]
+size = Vector3(0.0435791, 0.8838501, 0.9025879)
+
+[node name="Stop" type="Node3D" unique_id=1794366764]
+
+[node name="Sketchfab_Scene" parent="." unique_id=374146824 instance=ExtResource("1_t2b8o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11621356, 0, -0.21272779)
+
+[node name="Area3D" type="Area3D" parent="Sketchfab_Scene" unique_id=831439690]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Sketchfab_Scene/Area3D" unique_id=145083858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0010588765, 1.0864717, -0.0008983612)
+visible = false
+use_collision = true
+size = Vector3(0.041748047, 3.2005615, 0.04309082)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sketchfab_Scene/Area3D" unique_id=1916254432]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, -0.019384757, 2.388324, 0.0036132783)
+visible = false
+shape = SubResource("BoxShape3D_nvru6")
