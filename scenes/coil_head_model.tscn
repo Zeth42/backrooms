@@ -1,8 +1,15 @@
 [gd_scene format=4 uid="uid://cflbmn0wevt1d"]
 
 [ext_resource type="Script" uid="uid://bgmlm1tat5nlh" path="res://scripts/coil_head_model.gd" id="1_2u0qb"]
+[ext_resource type="AudioStream" uid="uid://ifbcpji3e4fp" path="res://assets/audio/BareFootstep1.mp3" id="2_2368g"]
 [ext_resource type="Texture2D" uid="uid://54dcfwxhdkjp" path="res://assets/models/Coil_Head/coilhead_0.png" id="2_sl3yj"]
 [ext_resource type="Texture2D" uid="uid://d0smucft4yf0u" path="res://assets/models/Coil_Head/coilhead_1.png" id="3_gtmhw"]
+[ext_resource type="AudioStream" uid="uid://be0fejip0dkn0" path="res://assets/audio/BareFootstep2.mp3" id="3_yk2bo"]
+[ext_resource type="AudioStream" uid="uid://c42ta1gjr4qnu" path="res://assets/audio/BareFootstep3.mp3" id="4_r8icj"]
+[ext_resource type="AudioStream" uid="uid://bvbx560r81e8p" path="res://assets/audio/BareFootstep4.mp3" id="5_spyrv"]
+[ext_resource type="AudioStream" uid="uid://vwbxtgowtj3w" path="res://assets/audio/Spring1.mp3" id="6_ecw1n"]
+[ext_resource type="AudioStream" uid="uid://dgqo38kc1am31" path="res://assets/audio/Spring2.mp3" id="7_a3chi"]
+[ext_resource type="AudioStream" uid="uid://pdgg8s8jx58t" path="res://assets/audio/Spring3.mp3" id="8_jtcqy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2nb2w"]
 resource_name = "coil"
@@ -55,9 +62,13 @@ radius = 15.0
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aftjw"]
 radius = 0.3
 
-[node name="Coil Head" type="CharacterBody3D" unique_id=1781944264]
+[node name="Coil Head" type="CharacterBody3D" unique_id=1781944264 node_paths=PackedStringArray("pasos_player", "golpe_metal_player")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_2u0qb")
+sonidos_pasos = Array[AudioStream]([ExtResource("2_2368g"), ExtResource("3_yk2bo"), ExtResource("4_r8icj"), ExtResource("5_spyrv")])
+sonidos_resorte = Array[AudioStream]([ExtResource("6_ecw1n"), ExtResource("7_a3chi"), ExtResource("8_jtcqy")])
+pasos_player = NodePath("FootstepsPlayer")
+golpe_metal_player = NodePath("AudioStreamPlayer3D")
 
 [node name="Sketchfab_model" type="Node3D" parent="." unique_id=1059927242]
 transform = Transform3D(1, 0, 0, 0, 2.220446e-16, 1, 0, -1, 2.220446e-16, 0, 0, 0)
@@ -93,3 +104,9 @@ debug_enabled = true
 [node name="CooldownTimer" type="Timer" parent="." unique_id=879777420]
 
 [node name="WanderTimer" type="Timer" parent="." unique_id=41661731]
+
+[node name="FootstepsPlayer" type="AudioStreamPlayer3D" parent="." unique_id=1243053318]
+max_distance = 90.0
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=1838386259]
+max_distance = 90.0
