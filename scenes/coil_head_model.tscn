@@ -45,13 +45,18 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_xb1x4")
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aftjw"]
-radius = 0.3
+[sub_resource type="BoxShape3D" id="BoxShape3D_2u0qb"]
+margin = 0.0
+size = Vector3(0.2, 1.8, 0.1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_njtcc"]
 radius = 15.0
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aftjw"]
+radius = 0.3
+
 [node name="Coil Head" type="CharacterBody3D" unique_id=1781944264]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 script = ExtResource("1_2u0qb")
 
 [node name="Sketchfab_model" type="Node3D" parent="." unique_id=1059927242]
@@ -63,8 +68,8 @@ transform = Transform3D(1, 0, 0, 0, 2.220446e-16, 1, 0, -1, 2.220446e-16, 0, 0, 
 mesh = SubResource("ArrayMesh_gaw25")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2035180997]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9271782, 0.030141652)
-shape = SubResource("CapsuleShape3D_aftjw")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9188794, 0.030141652)
+shape = SubResource("BoxShape3D_2u0qb")
 
 [node name="DetectionArea" type="Area3D" parent="." unique_id=86955334]
 
@@ -73,18 +78,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0435426, 0)
 shape = SubResource("SphereShape3D_njtcc")
 debug_fill = false
 
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="DetectionArea" unique_id=2116645071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9271782, 0.030141652)
+shape = SubResource("CapsuleShape3D_aftjw")
+
 [node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=143304944]
 transform = Transform3D(0.44266394, 0, 0, 0, 0.880952, 0, 0, 0, 0.1585196, 0.0010920018, 0.9985539, 0.038199604)
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=40731696]
+debug_enabled = true
 
 [node name="ChaseTimer" type="Timer" parent="." unique_id=86466688]
 
 [node name="CooldownTimer" type="Timer" parent="." unique_id=879777420]
 
 [node name="WanderTimer" type="Timer" parent="." unique_id=41661731]
-
-[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
-[connection signal="timeout" from="ChaseTimer" to="." method="_on_chase_timer_timeout"]
-[connection signal="timeout" from="CooldownTimer" to="." method="_on_cooldown_timer_timeout"]
-[connection signal="timeout" from="WanderTimer" to="." method="_on_wander_timer_timeout"]

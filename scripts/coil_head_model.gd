@@ -1,133 +1,134 @@
 extends CharacterBody3D
 
-enum State { WANDER, CHASE, DISABLED }
-var current_state: State = State.WANDER
+enum State { CHASE, DISABLED }
+var current_state: State = State.CHASE # Siempre en cacería activa
 
-@export var speed_wander: float = 7.0
-@export var speed_chase: float = 10.0 # igual a jugador sprinteando
-@export var wander_radius: float = 10.0
+var mapa_listo: bool = false
+
+# Variables para el sistema Anti-Atasco
+var ultima_posicion: Vector3 = Vector3.ZERO
+var tiempo_estancado: float = 0.0
+const TIEMPO_LIMITE_ESTANCADO: float = 0.8
+
+@export var speed_chase: float = 10.0
 
 var player: CharacterBody3D = null
-var wander_target: Vector3 = Vector3.ZERO
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
-@onready var cooldown_timer: Timer = $CooldownTimer
-@onready var chase_timer: Timer = $ChaseTimer
-@onready var wander_timer: Timer = $WanderTimer
 @onready var notifier: VisibleOnScreenNotifier3D = $VisibleOnScreenNotifier3D
 
 func _ready() -> void:
-	# Configurar Timers
-	cooldown_timer.wait_time = 40.0
-	cooldown_timer.one_shot = true
-	chase_timer.wait_time = 10.0
-	chase_timer.one_shot = true
+	$Sketchfab_model.rotation.y = deg_to_rad(180)
+	nav_agent.path_desired_distance = 1.5
+	nav_agent.target_desired_distance = 1.5
 	
-	_make_new_wander_target()
+	# Conseguir la referencia del jugador automáticamente (usando su grupo)
+	await get_tree().create_timer(0.5).timeout
+	var jugadores = get_tree().get_nodes_in_group("Player")
+	if jugadores.size() > 0:
+		player = jugadores[0] as CharacterBody3D
+		
+	mapa_listo = true
+	print("[SISTEMA] Coil Head activado a nivel global. ¡La cacería comenzó!")
 
 func _physics_process(delta: float) -> void:
-	if current_state == State.DISABLED:
-		velocity = Vector3.ZERO
-		move_and_slide()
+	if not mapa_listo or not player:
 		return
 
-	# REGLA DE ORO: Si el jugador lo está mirando (y hay línea de visión), se congela por completo
-	if _is_player_looking_at_me():
+	var mirando = _is_player_looking_at_me()
+
+	if mirando:
 		velocity = Vector3.ZERO
-		move_and_slide()
-		# Si estaba persiguiendo y lo miras, detenemos temporalmente el contador de los 10s
-		if current_state == State.CHASE and not chase_timer.is_paused():
-			chase_timer.set_paused(true)
 		return
+
+
+	# NO lo miran -> persecución completa
+
+	nav_agent.target_position = player.global_position
+	var next_pos = nav_agent.get_next_path_position()
+
+	if Engine.get_physics_frames() % 60 == 0:
+		print("[CACERÍA GLOBAL] Distancia: ",
+			global_position.distance_to(player.global_position))
+
+	_move_towards(next_pos, speed_chase, delta)
+
+
+	# Anti-atasco
+	var distancia_movida = global_position.distance_to(ultima_posicion)
+
+	if distancia_movida < 0.02:
+		tiempo_estancado += delta
+		
+		if tiempo_estancado >= TIEMPO_LIMITE_ESTANCADO:
+			_ejecutar_teletransporte_rescate()
+			tiempo_estancado = 0.0
 	else:
-		# Si no lo estás mirando y estaba persiguiendo, reanuda su tiempo de persecución
-		if current_state == State.CHASE && chase_timer.is_paused():
-			chase_timer.set_paused(false)
+		tiempo_estancado = 0.0
 
-	# Lógica de movimiento según el estado actual
-	match current_state:
-		State.WANDER:
-			_move_towards(wander_target, speed_wander, delta)
-			if nav_agent.is_navigation_finished():
-				_make_new_wander_target()
-				
-		State.CHASE:
-			if player:
-				nav_agent.target_position = player.global_position
-				var next_pos = nav_agent.get_next_path_position()
-				_move_towards(next_pos, speed_chase, delta)
+	ultima_posicion = global_position
 
 func _move_towards(target: Vector3, speed: float, delta: float) -> void:
-	var current_pos = global_transform.origin
-	var next_pos = target
-	var new_velocity = (next_pos - current_pos).normalized() * speed
-	
-	# Evitar que se mueva en el eje Y bruscamente (mantenerlo en el suelo)
-	velocity.x = new_velocity.x
-	velocity.z = new_velocity.z
+	var direccion = target - global_position
+	direccion.y = 0
+	direccion = direccion.normalized()
+
+	velocity.x = direccion.x * speed
+	velocity.z = direccion.z * speed
+
+
 	if not is_on_floor():
 		velocity.y -= 9.8 * delta
-		
+	else:
+		velocity.y = 0
+
+
 	move_and_slide()
-	
-# Rotar hacia donde camina (solo si no está en la misma posición)
-	if velocity.length() > 0.2:
-		var look_target = global_position + Vector3(velocity.x, 0, velocity.z)
-		# PROTECCIÓN: Solo mirar si el objetivo no es exactamente nuestra posición actual
-		if global_position.distance_to(look_target) > 0.001:
-			look_at(look_target, Vector3.UP)
+
+
+	var velocity_flat = Vector3(velocity.x, 0, velocity.z)
+
+	if velocity_flat.length() > 0.5:
+		look_at(
+			global_position + velocity_flat,
+			Vector3.UP
+		)
 
 func _is_player_looking_at_me() -> bool:
-	# 1. Validación rápida: ¿Está dentro de la pantalla/cámara del jugador?
 	if not notifier.is_on_screen():
 		return false
-		
 	if not player:
 		return false
 		
-	# 2. Validación de obstáculos (Raycast): ¿Hay una pared entre la cámara y el Coil Head?
 	var space_state = get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(player.global_position + Vector3.UP * 1.5, global_position + Vector3.UP * 1.5)
-	# Asegúrate de que el Raycast ignore al propio Coil Head y al jugador
 	query.exclude = [self.get_rid(), player.get_rid()] 
 	
 	var result = space_state.intersect_ray(query)
-	
 	if result.is_empty():
-		# No hay nada obstruyendo la vista
 		return true
+	return false
+
+func _ejecutar_teletransporte_rescate() -> void:
+	if not player:
+		return
+		
+	print("[SISTEMA RESCATE] Coil Head atrapado en colisión. Ejecutando salto de malla...")
+		
+	# 1. Calculamos la dirección hacia el jugador
+	var direccion_empujon = (player.global_position - global_position).normalized()
+	direccion_empujon.y = 0
+	direccion_empujon = direccion_empujon.normalized()
 	
-	return false # Hay una pared en medio
-
-func _make_new_wander_target() -> void:
-	# Genera un punto aleatorio en el mapa de navegación para merodear
-	var random_dir = Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized()
-	wander_target = global_position + random_dir * wander_radius
-	nav_agent.target_position = wander_target
-	wander_timer.start(randf_range(3.0, 7.0)) # Cambia de rumbo cada tanto
-
-# --- SEÑALES ---
-
-# Conecta la señal body_entered de tu DetectionArea (Area3D)
-func _on_detection_area_body_entered(body: Node3D) -> void:
-	if body.is_in_group("Player") and current_state == State.WANDER:
-		player = body
-		current_state = State.CHASE
-		chase_timer.start() # Inicia la cuenta regresiva de 10 segundos de persecución
-
-# Conecta la señal timeout de tu ChaseTimer
-func _on_chase_timer_timeout() -> void:
-	# Pasaron los 10 segundos continuos de persecución activa
-	current_state = State.DISABLED
-	cooldown_timer.start() # Inicia los 40 segundos de desactivación
-
-# Conecta la señal timeout de tu CooldownTimer
-func _on_cooldown_timer_timeout() -> void:
-	# Terminaron los 40 segundos de paz, vuelve a merodear
-	current_state = State.WANDER
-	_make_new_wander_target()
-
-# Conecta la señal timeout de tu WanderTimer
-func _on_wander_timer_timeout() -> void:
-	if current_state == State.WANDER:
-		_make_new_wander_target()
+	# 2. Aumentamos el empujón a 1.2 metros para superar el grosor de las esquinas modulares
+	var posicion_tentativa = global_position + (direccion_empujon * 1.2)
+	
+	# 3. Buscamos el punto seguro más cercano en la NavMesh
+	var mapa_navegacion = nav_agent.get_navigation_map()
+	var punto_malla_seguro = NavigationServer3D.map_get_closest_point(mapa_navegacion, posicion_tentativa)
+	
+	# 4. Hacemos el salto físico
+	global_position = punto_malla_seguro
+	
+	# 5. Forzamos al agente de navegación a recalcular el camino en este frame
+	nav_agent.target_position = player.global_position
